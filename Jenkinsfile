@@ -1,17 +1,15 @@
-node {
-    // Definisikan kontainer Docker
-    def nodejsImage = docker.image('node:16-buster-slim').run('-p 3000:3000')
-
-    try {
-        // Langkah Build
+pipeline {
+    agent {
+        docker {
+            image 'node:16-buster-slim'
+            args '-p 3000:3000'
+        }
+    }
+    stages {
         stage('Build') {
-            nodejsImage.inside {
-                // Perintah yang dijalankan dalam kontainer Docker
+            steps {
                 sh 'npm install'
             }
         }
-    } finally {
-        // Hentikan kontainer Docker setelah selesai
-        nodejsImage.stop()
     }
 }
