@@ -11,10 +11,10 @@ pipeline {
                 sh 'npm install'
             }
         }
-    }
-    stages ("Test") {
-        step {
-            sh './jenkins/scripts/test.sh'
+        stages ("Test") {
+            steps {
+                sh './jenkins/scripts/test.sh'
+            }
         }
     }
 }
