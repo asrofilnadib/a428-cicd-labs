@@ -1,18 +1,36 @@
-node {
-    docker.image('node:16-buster-slim').inside('-p 3000:3000') {
+pipeline {
+    agent {
+        docker {
+            image 'node:lts-buster-slim'
+            args '-p 3000:3000'
+        }
+    }
+    environment {
+        CI = 'true'
+    }
+    stages {
         stage('Build') {
-                sh 'npm install'
+            steps {
+                script {
+                    sh 'npm install'
+                }
+            }
         }
         stage('Test') {
-                sh './jenkins/scripts/test.sh'
+            steps {
+                script {
+                    sh './jenkins/scripts/test.sh'
+                }
+            }
         }
-        stage('Manual Approval') {
-                input message: 'Lanjutkan ke tahap Deploy? (Klik "Proceed" untuk melanjutkan)'
-        }
-        stage('Deploy') {
-                sh './jenkins/scripts/deliver.sh'
-                sleep(time: 2, unit: 'MINUTES')
-                sh './jenkins/scripts/kill.sh'
+        stage('Deliver') {
+            steps {
+                script {
+                    sh './jenkins/scripts/deliver.sh'
+                    input message: 'Finished using the website? (Click "Proceed" to continue)'
+                    sh './jenkins/scripts/kill.sh'
+                }
+            }
         }
     }
 }
