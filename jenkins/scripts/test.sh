@@ -2,7 +2,7 @@
 
 echo 'The following "npm" command (if executed) installs the "cross-env"'
 echo 'dependency into the local "node_modules" directory, which will ultimately'
-echo 'be stored in the Jenkins home directory. As described in'
+echo 'be stored in the Jenkinsfile home directory. As described in'
 echo 'https://docs.npmjs.com/cli/install, the "--save-dev" flag causes the'
 echo '"cross-env" dependency to be installed as "devDependencies". For the'
 echo 'purposes of this tutorial, this flag is not important. However, when'
