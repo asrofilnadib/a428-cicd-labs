@@ -1,16 +1,20 @@
 node {
     checkout scm
-    docker.image('node:lts-buster-slim').inside('-p 3000:3000') {
+    
+    def reactContainer
+    docker.image('node:lts-buster-slim').withRun('-p 3000:3000') { c ->
+        reactContainer = c
+        
         stage('Build') {
-            sh 'npm install'
+            sh "docker exec ${c.id} npm install"
         }
         stage('Test') {
-            sh './jenkins/scripts/test.sh'
+            sh "docker exec ${c.id} ./jenkins/scripts/test.sh"
         }
         stage('Deliver') {
-            sh './jenkins/scripts/deliver.sh'
+            sh "docker exec ${c.id} ./jenkins/scripts/deliver.sh"
             input message: 'Finished using the website? (Click "Proceed" to continue)'
-            sh './jenkins/scripts/kill.sh'
+            sh "docker exec ${c.id} ./jenkins/scripts/kill.sh"
         }
     }
 }
